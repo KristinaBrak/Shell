@@ -4,13 +4,16 @@ import java.io.File;
 import java.util.List;
 
 import command.Command;
+import shell.Directory;
 
 public class ListCommand implements Command {
     private final String PATH = "~/Desktop/";
     private File file;
+    private Directory directory;
 
-    public ListCommand() {
+    public ListCommand(Directory directory) {
         this.file = new File(PATH);
+        this.directory = directory;
     }
 
     public void list() {

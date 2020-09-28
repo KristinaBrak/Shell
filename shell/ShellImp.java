@@ -21,13 +21,14 @@ public class ShellImp implements Shell {
     private Map<String, Command> listOfCommands;
 
     public ShellImp() {
-        String currentDirectory = "~/Desktop";
+        // final String currentDirectory = System.getProperty("user.dir");
+        final String currentDirectory = "/home/kristina";
         this.directory = new Directory(currentDirectory);
 
         listOfCommands = new HashMap<String, Command>();
         listOfCommands.put("stop", new StopCommand());
-        listOfCommands.put("enter", new EnterCommand());
-        listOfCommands.put("list", new ListCommand());
+        listOfCommands.put("enter", new EnterCommand(directory));
+        listOfCommands.put("list", new ListCommand(directory));
 
     }
 
@@ -60,7 +61,7 @@ public class ShellImp implements Shell {
     }
 
     private List<String> getArguments(String input) throws NoSuchElementException {
-        String[] commandData = input.trim().toLowerCase().split(" ");
+        String[] commandData = input.trim().split(" ");
         if (commandData.length == 0) {
             throw new NoSuchElementException();
         }
