@@ -17,11 +17,12 @@ import command.ListCommand;
 import command.StopCommand;
 
 public class ShellImp implements Shell {
-    private String currentDirectory;
+    private Directory directory;
     private Map<String, Command> listOfCommands;
 
-    public ShellImp(String currentDirectory) {
-        this.currentDirectory = currentDirectory;
+    public ShellImp() {
+        String currentDirectory = "~/Desktop";
+        this.directory = new Directory(currentDirectory);
 
         listOfCommands = new HashMap<String, Command>();
         listOfCommands.put("stop", new StopCommand());
@@ -35,7 +36,8 @@ public class ShellImp implements Shell {
 
         Scanner scan = new Scanner(System.in);
         while (true) {
-            System.out.print("directory>");
+
+            System.out.print(directory.get() + ">");
             String input = scan.nextLine().toString();
 
             try {

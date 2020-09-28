@@ -1,11 +1,11 @@
 
-import shell.Shell;
-import shell.ShellImp;
+import shell.*;
 
 public class Main {
     public static void main(String[] args) {
-        String currentDirectory = "~/Desktop/";
-        Shell shell = new ShellImp(currentDirectory);
+
+
+        Shell shell = new ShellImp();
         shell.run();
 
     }
