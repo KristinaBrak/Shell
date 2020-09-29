@@ -21,8 +21,8 @@ public class ShellImp implements Shell {
     private Map<String, Command> listOfCommands;
 
     public ShellImp() {
-        // final String currentDirectory = System.getProperty("user.dir");
-        final String currentDirectory = "/home/kristina";
+        final String currentDirectory = System.getProperty("user.dir");
+
         this.directory = new Directory(currentDirectory);
 
         listOfCommands = new HashMap<String, Command>();
