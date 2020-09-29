@@ -22,7 +22,7 @@ public class ListCommand implements Command {
 
         File dir = new File(this.directory.get());
         String[] listOfFileNames = dir.list();
-        String currentPath = dir.getPath() + "/";
+        String currentPath = dir.getPath() + File.separator;
 
         getStream(listOfFileNames, currentPath).forEach(file -> System.out.println(getFormatedFileDisplay(file)));
 
