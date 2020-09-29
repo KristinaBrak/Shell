@@ -2,19 +2,21 @@
 package command;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
-
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Scanner;
 
 import shell.Directory;
 
 public class CopyCommand implements Command {
     private Directory directory;
+    private FileSaver fileSaver;
 
     public CopyCommand(Directory directory) {
         this.directory = directory;
+        fileSaver = new FileSaver();
     }
 
     @Override
@@ -22,40 +24,31 @@ public class CopyCommand implements Command {
         if (arguments.size() != 2) {
             throw new NoSuchElementException("Wrong number of argument ");
         }
-        copyFile(arguments.get(0), arguments.get(1));
-    }
-
-    private void copyFile(String originalFileName, String copyDirName) {
-        String[] directories = copyDirName.split(File.separator);
-        int lastPosition = directories.length - 1;
-        String copyFileName = directories[lastPosition].trim();
-
-        String newDirectory = changeDirectory(directories);
-        // createFile(newDirectory, copyFileName);
-    }
-
-    private String changeDirectory(String[] copyToDirectories) {
-        // String[] currentDirectories = directory.get().split("/");
-        String currentDirectory = this.directory.get();
-        // String matchingDirectories = "";
-        // for (String current : currentDirectories) {
-        // for (String copy : copyToDirectories) {
-        // if (current.equals(copy)) {
-        // matchingDirectories = current;
-        // }
-        // }
-        // }
+        String copyToFile = arguments.get(1);
+        String currentDirectory = directory.get() + File.separator + copyToFile;
+        String content = copyFile(arguments.get(0));
+        // System.out.println(content);
         try {
-            String matchingDir = Stream.of(copyToDirectories).filter(current -> currentDirectory.contains(current))
-                    .collect(Collectors.joining(File.separator));
-            System.out.println(matchingDir);
-        } catch (NullPointerException e) {
-
+            fileSaver.save(currentDirectory, content);
+        } catch (IOException e) {
+            throw new NoSuchElementException();
         }
-        return null;
     }
 
-    private void createFile(String directoryTo, String copy) {
+    private String copyFile(String originalFileName) {
+        File copyFromFile = new File(directory.get() + File.separator + originalFileName);
+        String content = "";
+        try {
+            Scanner scan = new Scanner(copyFromFile);
 
+            while (scan.hasNextLine()) {
+                content = scan.nextLine();
+            }
+            scan.close();
+        } catch (FileNotFoundException e) {
+            throw new NoSuchElementException("File" + originalFileName + "does not exist");
+        }
+        return content;
     }
+
 }

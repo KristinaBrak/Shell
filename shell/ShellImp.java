@@ -10,11 +10,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import command.Command;
+import command.CopyCommand;
+import command.CreateCommand;
 import command.DeleteCommand;
 import command.EnterCommand;
 import command.LeaveCommand;
 import command.ListCommand;
-
 import command.StopCommand;
 
 public class ShellImp implements Shell {
@@ -32,6 +33,8 @@ public class ShellImp implements Shell {
         listOfCommands.put("list", new ListCommand(directory));
         listOfCommands.put("leave", new LeaveCommand(directory));
         listOfCommands.put("delete", new DeleteCommand(directory));
+        listOfCommands.put("copy", new CopyCommand(directory));
+        listOfCommands.put("create", new CreateCommand(directory));
 
     }
 
