@@ -5,15 +5,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import command.Command;
 import command.EnterCommand;
+import command.LeaveCommand;
 import command.ListCommand;
-// import command.ListCommand;
-// import command.StopCommand;
+
 import command.StopCommand;
 
 public class ShellImp implements Shell {
@@ -29,6 +28,7 @@ public class ShellImp implements Shell {
         listOfCommands.put("stop", new StopCommand());
         listOfCommands.put("enter", new EnterCommand(directory));
         listOfCommands.put("list", new ListCommand(directory));
+        listOfCommands.put("leave", new LeaveCommand(directory));
 
     }
 

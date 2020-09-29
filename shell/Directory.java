@@ -1,16 +1,18 @@
 package shell;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Stack;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Directory {
     private String currentDirectory;
-    Stack<String> stack = new Stack<String>();
+    Stack<String> stack;
     private final String seperator = "/";
 
     public Directory(String directory) {
+        stack = new Stack<String>();
         currentDirectory = directory;
         pushListToStack(directory);
     }
@@ -20,10 +22,14 @@ public class Directory {
         currentDirectory += seperator + enteredFolder;
     }
 
-    public void remove() {
-        String folderToRemove = stack.pop();
-        int endIndex = currentDirectory.length() - folderToRemove.length() - 1;
-        currentDirectory = currentDirectory.substring(0, endIndex);
+    public void remove() throws NoSuchElementException {
+        if (stack.size() > 1) {
+            String folderToRemove = stack.pop();
+            int endIndex = currentDirectory.length() - folderToRemove.length() - 1;
+            currentDirectory = currentDirectory.substring(0, endIndex);
+        } else {
+            throw new NoSuchElementException("No directory to exit");
+        }
     }
 
     public String get() {
