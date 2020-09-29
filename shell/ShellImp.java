@@ -1,5 +1,6 @@
 package shell;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import command.Command;
+import command.CopyCommand;
+import command.CreateCommand;
 import command.EnterCommand;
 import command.LeaveCommand;
 import command.ListCommand;
@@ -29,6 +32,8 @@ public class ShellImp implements Shell {
         listOfCommands.put("enter", new EnterCommand(directory));
         listOfCommands.put("list", new ListCommand(directory));
         listOfCommands.put("leave", new LeaveCommand(directory));
+        listOfCommands.put("copy", new CopyCommand(directory));
+        listOfCommands.put("create", new CreateCommand(directory));
 
     }
 

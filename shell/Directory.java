@@ -1,5 +1,6 @@
 package shell;
 
+import java.io.File;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Stack;
@@ -28,7 +29,7 @@ public class Directory {
             int endIndex = currentDirectory.length() - folderToRemove.length() - 1;
             currentDirectory = currentDirectory.substring(0, endIndex);
         } else {
-            throw new NoSuchElementException("No directory to exit");
+            throw new NoSuchElementException("Cannot leave, history empty");
         }
     }
 
@@ -42,7 +43,7 @@ public class Directory {
     }
 
     private List<String> seperateDirectories(String directory) {
-        String[] folders = directory.trim().split("/");
+        String[] folders = directory.trim().split(File.separator);
         var directories = Stream.of(folders).map(folder -> folder.trim()).collect(Collectors.toList());
         return directories;
     }
