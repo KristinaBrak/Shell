@@ -1,4 +1,4 @@
-package command;
+package shell;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -11,15 +11,18 @@ public class FileSaver {
             File file = createFile(currentDirectory);
             addContentToFile(file, content);
         } catch (IOException e) {
-            throw new IOException();
+            throw new IOException(e.getMessage());
         }
     }
 
     private File createFile(String currentDirectory) throws IOException {
         String path = currentDirectory;
         File file = new File(path);
-
-        file.createNewFile();
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            throw new IOException("Cannot create file");
+        }
         return file;
     }
 

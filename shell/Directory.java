@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 public class Directory {
     private String currentDirectory;
     Stack<String> stack;
-    private final String seperator = "/";
+    private final int MIN_DIRECTORIES = 3;
 
     public Directory(String directory) {
         stack = new Stack<String>();
@@ -20,16 +20,16 @@ public class Directory {
 
     public void add(String enteredFolder) {
         stack.push(enteredFolder);
-        currentDirectory += seperator + enteredFolder;
+        currentDirectory += File.separator + enteredFolder;
     }
 
     public void remove() throws NoSuchElementException {
-        if (stack.size() > 1) {
+        if (stack.size() >= MIN_DIRECTORIES) {
             String folderToRemove = stack.pop();
             int endIndex = currentDirectory.length() - folderToRemove.length() - 1;
             currentDirectory = currentDirectory.substring(0, endIndex);
         } else {
-            throw new NoSuchElementException("Cannot leave, history empty");
+            throw new NoSuchElementException("Cannot leave home directory");
         }
     }
 

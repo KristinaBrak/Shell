@@ -7,11 +7,13 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import shell.Directory;
+import shell.FileSaver;
 
 public class CreateCommand implements Command {
     private Directory directory;
     private final String CONTENT_SYMBOL = "\"";
     private FileSaver fileSaver;
+    private final int NUMBER_OF_ARGUMENTS = 2;
 
     public CreateCommand(Directory directory) {
         this.directory = directory;
@@ -20,6 +22,9 @@ public class CreateCommand implements Command {
 
     @Override
     public void start(List<String> arguments) throws NoSuchElementException {
+        if (!hasEnoughArguments(arguments)) {
+            throw new NoSuchElementException("Incorrect number of arguments");
+        }
         String fileName = arguments.get(0);
         arguments.remove(0);
         String content = getContent(arguments);
@@ -31,21 +36,24 @@ public class CreateCommand implements Command {
         }
     }
 
+
+    private boolean hasEnoughArguments(List<String> arguments) {
+        if (arguments.size() >= NUMBER_OF_ARGUMENTS) {
+            return true;
+        }
+        return false;
+    }
+
     private String getContent(List<String> arguments) throws NoSuchElementException {
+
         int lastPosition = arguments.size() - 1;
         if (!isContent(arguments.get(0), arguments.get(lastPosition))) {
             throw new NoSuchElementException("No content specified");
         }
 
-        String firstWord = arguments.get(0).split(CONTENT_SYMBOL)[1];
-        String lastWord = arguments.get(lastPosition).split(CONTENT_SYMBOL)[0];
-        arguments.remove(lastPosition);
-        arguments.remove(0);
+        String content = arguments.stream().collect(Collectors.joining(" "));
 
-        String argumentSeperator = " ";
-        String content = firstWord + argumentSeperator;
-        content += arguments.stream().collect(Collectors.joining(argumentSeperator));
-        content += argumentSeperator + lastWord;
+        content = content.replace("\"", "");
         return content;
     }
 
@@ -57,6 +65,7 @@ public class CreateCommand implements Command {
     }
 
     private boolean isContainingContentSymbols(String content) {
-        return content.contains(CONTENT_SYMBOL);
+        return content.contains((CharSequence) CONTENT_SYMBOL);
+
     }
 }

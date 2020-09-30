@@ -9,14 +9,15 @@ import shell.Directory;
 
 public class DeleteCommand implements Command {
     private Directory directory;
+    private final int NUMBER_OF_ARGUMENTS = 1;
 
     public DeleteCommand(Directory directory) {
         this.directory = directory;
     }
 
     @Override
-    public void start(List<String> arguments) {
-        if (arguments.size() != 1) {
+    public void start(List<String> arguments) throws NoSuchElementException {
+        if (arguments.size() != NUMBER_OF_ARGUMENTS) {
             throw new NoSuchElementException("Incorrect argument number");
         }
         String fileName = arguments.get(0);
@@ -25,13 +26,14 @@ public class DeleteCommand implements Command {
         delete(directoryToBeDeleted);
     }
 
-    private void delete(String directoryToBeDeleted) {
+    private void delete(String directoryToBeDeleted) throws NoSuchElementException {
         File dir = new File(directoryToBeDeleted);
         File[] allContents = dir.listFiles();
         if (allContents != null) {
             Stream.of(allContents).forEach(file -> delete(file.getAbsolutePath()));
+            dir.delete();
         }
-        dir.delete();
+        throw new NoSuchElementException("No such file/directory");
     }
 
 }

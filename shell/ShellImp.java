@@ -21,6 +21,7 @@ import command.StopCommand;
 public class ShellImp implements Shell {
     private Directory directory;
     private Map<String, Command> listOfCommands;
+    private Scanner scan;
 
     public ShellImp() {
         // final String currentDirectory = System.getProperty("user.dir");
@@ -28,7 +29,7 @@ public class ShellImp implements Shell {
         this.directory = new Directory(currentDirectory);
 
         listOfCommands = new HashMap<String, Command>();
-        listOfCommands.put("stop", new StopCommand());
+        listOfCommands.put("stop", new StopCommand(this.scan));
         listOfCommands.put("enter", new EnterCommand(directory));
         listOfCommands.put("list", new ListCommand(directory));
         listOfCommands.put("leave", new LeaveCommand(directory));
@@ -41,7 +42,7 @@ public class ShellImp implements Shell {
     @Override
     public void run() {
 
-        Scanner scan = new Scanner(System.in);
+        scan = new Scanner(System.in);
         while (true) {
 
             System.out.print(directory.get() + ">");
@@ -50,17 +51,21 @@ public class ShellImp implements Shell {
             try {
                 handleInput(input);
             } catch (NoSuchElementException e) {
-                sendErrorMessage(input);
+                sendErrorMessage(e.getMessage());
             }
 
         }
-        // scan.close();
+
     }
 
     private void handleInput(String input) throws NoSuchElementException {
         List<String> arguments = getArguments(input);
-
-        Command command = getCommand(arguments.get(0));
+        Command command;
+        try {
+            command = getCommand(arguments.get(0));
+        } catch (NoSuchElementException e) {
+            throw new NoSuchElementException("No such command");
+        }
 
         arguments.remove(0);
         command.start(arguments);
@@ -81,7 +86,7 @@ public class ShellImp implements Shell {
     }
 
     private void sendErrorMessage(String incorrectCommand) {
-        System.out.println("Bad request: " + incorrectCommand);
+        System.out.println("Cannot execute: " + incorrectCommand);
     }
 
 }

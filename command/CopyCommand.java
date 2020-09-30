@@ -2,53 +2,41 @@
 package command;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Scanner;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import shell.Directory;
 
 public class CopyCommand implements Command {
     private Directory directory;
-    private FileSaver fileSaver;
 
     public CopyCommand(Directory directory) {
         this.directory = directory;
-        fileSaver = new FileSaver();
     }
 
     @Override
     public void start(List<String> arguments) throws NoSuchElementException {
         if (arguments.size() != 2) {
-            throw new NoSuchElementException("Wrong number of argument ");
+            throw new NoSuchElementException("Incorrect number of arguments");
         }
-        String copyToFile = arguments.get(1);
-        String currentDirectory = directory.get() + File.separator + copyToFile;
-        String content = copyFile(arguments.get(0));
-        // System.out.println(content);
-        try {
-            fileSaver.save(currentDirectory, content);
-        } catch (IOException e) {
-            throw new NoSuchElementException();
-        }
+        copyFile(arguments);
+
     }
 
-    private String copyFile(String originalFileName) {
-        File copyFromFile = new File(directory.get() + File.separator + originalFileName);
-        String content = "";
+    private void copyFile(List<String> arguments) throws NoSuchElementException {
+        File fileFrom = new File(directory.get() + File.separator + arguments.get(0));
+        File fileTo = new File(directory.get() + File.separator + arguments.get(1));
         try {
-            Scanner scan = new Scanner(copyFromFile);
-
-            while (scan.hasNextLine()) {
-                content = scan.nextLine();
-            }
-            scan.close();
-        } catch (FileNotFoundException e) {
-            throw new NoSuchElementException("File" + originalFileName + "does not exist");
+            Files.copy(fileFrom.toPath(), fileTo.toPath());
+        } catch (IOException e) {
+            throw new NoSuchElementException("Cannot copy " + fileFrom.getName() + " to " + fileTo.getName());
         }
-        return content;
+
     }
 
 }

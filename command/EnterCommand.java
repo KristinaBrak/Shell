@@ -9,6 +9,7 @@ import shell.Directory;
 
 public class EnterCommand implements Command {
     private Directory directory;
+    private final int NUMBER_OF_ARGUMENTS = 1;
 
     public EnterCommand(Directory directory) {
         this.directory = directory;
@@ -16,8 +17,8 @@ public class EnterCommand implements Command {
 
     @Override
     public void start(List<String> arguments) throws NoSuchElementException {
-        if (arguments.size() > 1) {
-            throw new NoSuchElementException();
+        if (arguments.size() != NUMBER_OF_ARGUMENTS) {
+            throw new NoSuchElementException("Incorrect number of arguments");
         } else {
             changeDirectory(arguments.get(0));
         }
@@ -25,7 +26,7 @@ public class EnterCommand implements Command {
 
     private void changeDirectory(String directoryName) throws NoSuchElementException {
         if (!isDirectoryValid(directoryName)) {
-            throw new NoSuchElementException();
+            throw new NoSuchElementException("No such directory");
         }
         directory.add(directoryName);
     }
@@ -35,7 +36,7 @@ public class EnterCommand implements Command {
         File[] files = currentDirectory.listFiles();
 
         if (files == null) {
-            throw new NoSuchElementException();
+            throw new NoSuchElementException("No such directory");
         }
 
         boolean isDirectory = Stream.of(files).filter(File::isDirectory)
