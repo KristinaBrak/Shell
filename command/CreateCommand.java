@@ -25,9 +25,10 @@ public class CreateCommand implements Command {
         if (!hasEnoughArguments(arguments)) {
             throw new NoSuchElementException("Incorrect number of arguments");
         }
-        String fileName = arguments.get(0);
-        arguments.remove(0);
+        String fileName = arguments.remove(0);
+
         String content = getContent(arguments);
+
         String path = directory.get() + File.separator + fileName;
         try {
             fileSaver.save(path, content);
@@ -35,7 +36,6 @@ public class CreateCommand implements Command {
             throw new NoSuchElementException("Path is incorrect");
         }
     }
-
 
     private boolean hasEnoughArguments(List<String> arguments) {
         if (arguments.size() >= NUMBER_OF_ARGUMENTS) {

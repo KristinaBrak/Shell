@@ -22,11 +22,14 @@ public class ShellImp implements Shell {
     private Directory directory;
     private Map<String, Command> listOfCommands;
     private Scanner scan;
+    private String previous;
+    private final String PREVIOUS_COMMAND = "p";
 
     public ShellImp() {
-        // final String currentDirectory = System.getProperty("user.dir");
-        final String currentDirectory = "/home/kristina/Desktop";
+        final String currentDirectory = System.getProperty("user.dir");
         this.directory = new Directory(currentDirectory);
+
+        scan = new Scanner(System.in);
 
         listOfCommands = new HashMap<String, Command>();
         listOfCommands.put("stop", new StopCommand(this.scan));
@@ -37,28 +40,31 @@ public class ShellImp implements Shell {
         listOfCommands.put("copy", new CopyCommand(directory));
         listOfCommands.put("create", new CreateCommand(directory));
 
+        this.previous = "stop";
+
     }
 
     @Override
     public void run() {
 
-        scan = new Scanner(System.in);
         while (true) {
 
             System.out.print(directory.get() + ">");
-            String input = scan.nextLine().toString();
+            String input = this.scan.nextLine().toString();
 
             try {
                 handleInput(input);
             } catch (NoSuchElementException e) {
                 sendErrorMessage(e.getMessage());
             }
-
         }
-
     }
 
     private void handleInput(String input) throws NoSuchElementException {
+        if (isPrevious(input)) {
+            input = this.previous;
+        }
+        this.previous = input;
         List<String> arguments = getArguments(input);
         Command command;
         try {
@@ -66,7 +72,6 @@ public class ShellImp implements Shell {
         } catch (NoSuchElementException e) {
             throw new NoSuchElementException("No such command");
         }
-
         arguments.remove(0);
         command.start(arguments);
     }
@@ -77,7 +82,15 @@ public class ShellImp implements Shell {
             throw new NoSuchElementException();
         }
         List<String> arguments = Stream.of(commandData).map(String::trim).collect(Collectors.toList());
+
         return arguments;
+    }
+
+    private boolean isPrevious(String input) {
+        if (input.equals(PREVIOUS_COMMAND)) {
+            return true;
+        }
+        return false;
     }
 
     private Command getCommand(String commandName) throws NoSuchElementException {
